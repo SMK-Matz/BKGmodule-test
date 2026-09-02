@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BKG-rekenmodule bedekte teelten - interactieve demonstratie">
+  <title>BKG-rekenmodule bedekte teelten</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header class="page-header">
+    <div class="container header-content">
+      <div class="brand-mark">SMK</div>
+      <div>
+        <h1 data-i18n="app_title">BKG-rekenmodule bedekte teelten</h1>
+        <p data-i18n="app_subtitle">Interactieve demonstratietool - GLK buiten beschouwing</p>
+      </div>
+      <div class="language-control">
+        <label for="language" data-i18n="language">Taal</label>
+        <select id="language" aria-label="Taal"></select>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="notice" data-i18n="demo_warning">
+      Let op: dit is een functionele demonstratie en geen officieel certificeringsinstrument.
+    </div>
+
+    <div class="app-layout">
+      <nav id="step-navigation" class="step-navigation" aria-label="Formulierstappen"></nav>
+
+      <div class="content-column">
+        <section class="step card active" data-step="0">
+          <h2 data-i18n="step_general">Invoer algemeen</h2>
+          <div class="form-grid">
+            <div class="field">
+              <label for="company" data-i18n="company_name">naam van bedrijf</label>
+              <input id="company" autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="address" data-i18n="business_address">vestigingsadres</label>
+              <input id="address" autocomplete="street-address">
+            </div>
+            <div class="field">
+              <label for="city" data-i18n="business_city">vestigingsplaats</label>
+              <input id="city" autocomplete="address-level2">
+            </div>
+            <div class="field">
+              <label for="country" data-i18n="country">land</label>
+              <select id="country"></select>
+            </div>
+            <div class="field">
+              <label for="year" data-i18n="report_year">rekenjaar</label>
+              <input id="year" type="number" min="2020" max="2035" value="2025">
+            </div>
+            <div class="field">
+              <label for="station" data-i18n="nearest_station">dichtstbijzijnde weerstation</label>
+              <select id="station"></select>
+            </div>
+          </div>
+          <div class="form-actions right"><button class="button" data-next="1" data-i18n="next">Volgende</button></div>
+        </section>
+
+        <section class="step card" data-step="1">
+          <h2 data-i18n="step_crops">Gewassen en teeltperioden</h2>
+          <p class="help" data-i18n="crops_help">Voeg per gewas en aaneengesloten teeltperiode een regel toe.</p>
+          <div class="table-scroll"><table>
+            <thead><tr>
+              <th data-i18n="location_name">evt. naam locatie</th>
+              <th data-i18n="crop">gewas</th>
+              <th data-i18n="area">areaal</th>
+              <th data-i18n="start_period">start teeltperiode</th>
+              <th data-i18n="end_period">einde teeltperiode</th>
+              <th data-i18n="year_production">jaarproductie</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="crop-rows"></tbody>
+          </table></div>
+          <button class="button secondary" id="add-crop" data-i18n="add_crop">Teelt toevoegen</button>
+          <div class="form-actions"><button class="button secondary" data-previous="0" data-i18n="previous">Vorige</button><button class="button" data-next="2" data-i18n="next">Volgende</button></div>
+        </section>
+
+        <section class="step card" data-step="2">
+          <h2 data-i18n="step_energy">Invoer energiestromen excl. elektra</h2>
+          <p class="help" data-i18n="energy_help">Vul hoeveelheden in zoals vermeld op facturen of meetoverzichten.</p>
+          <div class="table-scroll"><table>
+            <thead><tr>
+              <th data-i18n="location_name">evt. naam locatie</th>
+              <th data-i18n="energy_source">Energiebron (kiezen)</th>
+              <th data-i18n="quantity">hoeveelheid</th>
+              <th data-i18n="unit">eenheid</th>
+              <th data-i18n="emission_factor">emissiecoëfficiënt</th>
+              <th data-i18n="emission">emissie</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="energy-rows"></tbody>
+          </table></div>
+          <button class="button secondary" id="add-energy" data-i18n="add_energy">Energieregel toevoegen</button>
+
+          <h3 data-i18n="wkk_data">Gegevens van WKK</h3>
+          <div class="form-grid">
+            <div class="field"><label for="wkk-gas" data-i18n="wkk_gas">aardgas voor WKK</label><input id="wkk-gas" type="number" min="0" value="0"><small>m3</small></div>
+            <div class="field"><label for="wkk-production" data-i18n="wkk_electricity">Stroom productie WKK(s)</label><input id="wkk-production" type="number" min="0" value="0"><small>kWh</small></div>
+            <div class="field"><label for="thermal-efficiency" data-i18n="thermal_efficiency">Thermisch rendement WKK</label><input id="thermal-efficiency" type="number" min="0" max="1.05" step="0.01" value="0.50"></div>
+          </div>
+          <div class="form-actions"><button class="button secondary" data-previous="1" data-i18n="previous">Vorige</button><button class="button" data-next="3" data-i18n="next">Volgende</button></div>
+        </section>
+
+        <section class="step card" data-step="3">
+          <h2 data-i18n="step_electricity">Invoer elektra</h2>
+          <p class="help" data-i18n="electricity_help">Vul de totale bruto hoeveelheid geleverde stroom in zonder saldering.</p>
+          <div class="table-scroll"><table>
+            <thead><tr>
+              <th data-i18n="electricity_supplier">Stroomleverancier</th>
+              <th data-i18n="quantity_without_netting">hoeveelheid (zonder saldering)</th>
+              <th data-i18n="renewable">duurzaam opgewekt?</th>
+              <th data-i18n="electricity_factor">g CO2-eq per kWh</th>
+              <th data-i18n="emission">emissie</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="electricity-rows"></tbody>
+          </table></div>
+          <button class="button secondary" id="add-electricity" data-i18n="add_supplier">Stroomleverancier toevoegen</button>
+
+          <h3 data-i18n="own_generation">Zelf duurzaam opgewekte elektriciteit</h3>
+          <div class="form-grid">
+            <div class="field"><label for="own-green" data-i18n="own_green">zelf duurzaam opgewekte elektriciteit</label><input id="own-green" type="number" min="0" value="0"><small>kWh</small></div>
+            <div class="field"><label for="sold-green" data-i18n="sold_green">verkoop duurzaam opgewekte stroom</label><input id="sold-green" type="number" min="0" value="0"><small>kWh</small></div>
+            <div class="field"><label for="sold-wkk" data-i18n="sold_nonrenewable">verkoop niet-duurzaam opgewekte stroom</label><input id="sold-wkk" type="number" min="0" value="0"><small>kWh</small></div>
+          </div>
+          <div class="form-actions"><button class="button secondary" data-previous="2" data-i18n="previous">Vorige</button><button class="button" data-next="4" data-i18n="next">Volgende</button></div>
+        </section>
+
+        <section class="step card" data-step="4">
+          <h2 data-i18n="step_other">CO2, klimaatbeheersing en uitvoer energiestromen</h2>
+          <div class="form-grid">
+            <div class="field"><label for="external-co2" data-i18n="external_co2">Aanvoer CO2 van buiten het bedrijf (niet uit zelf verstookt gas)</label><input id="external-co2" type="number" min="0" value="0"><small>ton/jaar</small></div>
+            <div class="field"><label for="climate-electricity" data-i18n="climate_electricity">Gebruik elektra voor klimaatbeheersing</label><input id="climate-electricity" type="number" min="0" value="0"><small>kWh</small></div>
+            <div class="field"><label for="heat-pump" data-i18n="heat_pump">Waarvan voor warmtepomp(en)</label><input id="heat-pump" type="number" min="0" value="0"><small>kWh</small></div>
+            <div class="field"><label for="cop">COP</label><input id="cop" type="number" min="0.1" step="0.1" value="3"></div>
+            <div class="field"><label for="heat-sold" data-i18n="heat_delivery">Warmtelevering aan derden</label><input id="heat-sold" type="number" min="0" value="0"><small>GJ</small></div>
+            <div class="field"><label for="norm" data-i18n="demo_norm">Demonstratienorm</label><input id="norm" type="number" min="0" step="0.1" value="20"><small>kg CO2-eq/m2</small></div>
+          </div>
+          <div class="form-actions"><button class="button secondary" data-previous="3" data-i18n="previous">Vorige</button><button class="button orange" id="calculate" data-i18n="calculate">Controleren en berekenen</button></div>
+        </section>
+
+        <section class="step card" data-step="5">
+          <h2 data-i18n="step_result">Resultatenrapport</h2>
+          <div id="validation"></div>
+          <div id="result-kpis" class="kpi-grid"></div>
+          <div id="conclusion"></div>
+          <h3 data-i18n="calculation_summary">Berekeningssamenvatting</h3>
+          <table class="result-table"><tbody id="result-breakdown"></tbody></table>
+          <p class="help" data-i18n="result_disclaimer">Gebruik de officiële rekenmodule voor certificering.</p>
+          <div class="form-actions"><button class="button secondary" data-previous="4" data-i18n="previous">Vorige</button><button class="button" id="print" data-i18n="print">Afdrukken / PDF</button></div>
+        </section>
+
+        <footer class="toolbar">
+          <button class="button" id="save" data-i18n="save">Opslaan op apparaat</button>
+          <button class="button secondary" id="load" data-i18n="load">Laden</button>
+          <button class="button secondary" id="export" data-i18n="export_json">Export JSON</button>
+          <label class="button secondary" for="import-file" data-i18n="import_json">Import JSON</label>
+          <input id="import-file" type="file" accept="application/json" hidden>
+          <button class="button danger" id="reset" data-i18n="clear">Wissen</button>
+          <span id="status-message" class="help"></span>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
