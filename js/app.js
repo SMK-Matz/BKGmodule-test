@@ -6,6 +6,7 @@ import { calculateResult, energyEmission, electricityEmission, numberValue } fro
 import { validate } from "./validation.js";
 import { createCropRow, createEnergyRow, createElectricityRow, formatNumber } from "./ui.js";
 import { saveToBrowser, loadFromBrowser, clearBrowserStorage } from "./storage.js";
+import { generatePDFReport } from "./pdf-export.js";
 
 
 
@@ -35,6 +36,7 @@ function bindEvents() {
   document.querySelector("#print").addEventListener("click", () => window.print());
   document.querySelector("#save").addEventListener("click", saveCurrentData);
   document.querySelector("#load").addEventListener("click", loadCurrentData);
+  document.querySelector("#export-pdf").addEventListener("click", exportPDFReport);
   document.querySelector("#reset").addEventListener("click", resetApplication);
 
   document.addEventListener("click", event => {
@@ -206,5 +208,12 @@ function resetApplication() {
   window.location.reload();
 }
 function setStatus(message) { document.querySelector("#status-message").textContent = message; }
+
+function exportPDFReport() {
+  const data = collectData();
+  const result = calculateResult(data);
+  const norm = numberValue(data.fields.norm);
+  generatePDFReport(data, result, norm);
+}
 
 initialize();
