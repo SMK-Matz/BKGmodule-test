@@ -1,4 +1,3 @@
-
 import { APP_CONFIG } from "../data/config.js";
 import { COUNTRIES, WEATHER_STATIONS } from "../data/reference-data.js";
 import { ENERGY_CARRIERS } from "../data/energy-factors.js";
@@ -6,7 +5,7 @@ import { initializeLanguageSelector, applyTranslations, translate, getLanguage, 
 import { calculateResult, energyEmission, electricityEmission, numberValue } from "./calculations.js";
 import { validate } from "./validation.js";
 import { createCropRow, createEnergyRow, createElectricityRow, formatNumber } from "./ui.js";
-import { saveToBrowser, loadFromBrowser, clearBrowserStorage, exportJson, importJson } from "./storage.js";
+import { saveToBrowser, loadFromBrowser, clearBrowserStorage } from "./storage.js";
 
 
 
@@ -36,8 +35,6 @@ function bindEvents() {
   document.querySelector("#print").addEventListener("click", () => window.print());
   document.querySelector("#save").addEventListener("click", saveCurrentData);
   document.querySelector("#load").addEventListener("click", loadCurrentData);
-  document.querySelector("#export").addEventListener("click", () => exportJson(collectData()));
-  document.querySelector("#import-file").addEventListener("change", handleImport);
   document.querySelector("#reset").addEventListener("click", resetApplication);
 
   document.addEventListener("click", event => {
@@ -185,11 +182,6 @@ function loadCurrentData() {
   if (!data) return setStatus("Geen lokaal dossier gevonden.");
   applyData(data);
   setStatus(translate("loaded"));
-}
-async function handleImport(event) {
-  if (!event.target.files[0]) return;
-  try { applyData(await importJson(event.target.files[0])); setStatus(translate("imported")); }
-  catch { setStatus("Ongeldig JSON-bestand."); }
 }
 function applyData(data) {
   setLanguage(data.metadata?.language || APP_CONFIG.defaultLanguage);
